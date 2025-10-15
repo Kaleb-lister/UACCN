@@ -27,7 +27,7 @@ const quizQuestions = [
 
     { question: "Berikut ini salah satu ciri dari asimetric encryption adalah:", options: ["menggunakan sebuah encrypted shared key", "tidak dapat digunakan untuk keperluan autentikasi user", "menggunakan public key dan private key", "menggunakan sebuah shared key"], answer: "menggunakan public key dan private key", type: 'single' },
     
-    // Soal Berbasis Gambar Topologi 1 (No. 15-18)
+    // Soal Berbasis Gambar Topologi 1 (No. 15)
     { 
         question: "Pada topologi (RA-RB-RC-RD) berapakah jumlah directly connected network dan remote network dari RA?", 
         options: ["5 directly connected network dan 2 remote network", "2 directly connected network dan 5 remote network", "4 directly connected network dan 3 remote network", "3 directly connected network dan 4 remote network"], 
@@ -35,6 +35,7 @@ const quizQuestions = [
         type: 'single',
         image: 'direct-remot.png' 
     },
+    // Soal Berbasis Gambar Topologi 1 (No. 16)
     { 
         question: "Berdasarkan topologi (RA-RB-RC-RD), IP yang disarankan menjadi next hop RA untuk tujuan jaringan 192.168.2.0/24 kecuali....", 
         options: ["192.168.5.6", "192.168.5.14", "192.168.5.10", "192.168.5.2"], 
@@ -42,24 +43,26 @@ const quizQuestions = [
         type: 'single',
         image: 'direct-remot.png' 
     },
+    // Soal Berbasis Gambar Topologi 1 (No. 17)
     { 
-        question: "Berdasarkan topologi (RA-RB-RC-RD), berapa IP nexthop RA untuk pengiriman paket ke host 192.168.2.5?", 
+        question: "Berdasarkan topologi (RA-RB-RC-RD) dan Routing Table, berapa IP nexthop RA untuk pengiriman paket ke host 192.168.2.5?", 
         options: ["192.168.5.14", "192.168.5.10", "192.168.5.2", "192.168.5.6"], 
         answer: "192.168.5.10", 
         type: 'single',
-        image: 'routetabel.png' 
+        image: 'routetabel.png' // Menggunakan gambar routing table
     },
+    // Soal Berbasis Gambar Topologi 1 (No. 18)
     { 
-        question: "Berdasarkan topologi (RA-RB-RC-RD), berapa IP nexthop RB untuk pengiriman paket ke host 192.168.2.5?", 
+        question: "Berdasarkan topologi (RA-RB-RC-RD) dan Routing Table, berapa IP nexthop RB untuk pengiriman paket ke host 192.168.2.5?", 
         options: ["192.168.5.2", "192.168.5.10", "192.168.5.6", "192.168.5.14"], 
         answer: "192.168.5.14", 
         type: 'single',
-        image: 'routetabel.png' 
+        image: 'routetabel.png' // Menggunakan gambar routing table
     },
 
     { question: "Berikut merupakan isi dari routing table, kecuali:", options: ["Interface", "Next Hop", "Destination Network Address", "Next Router"], answer: "Next Router", type: 'single' },
 
-    // Soal Berbasis Gambar Topologi 2 (No. 20-23) - Asumsi gambar sama untuk kesederhanaan, atau ganti nama file jika ada gambar kedua
+    // Soal Berbasis Gambar Topologi 2 (No. 20-23)
     { 
         question: "Pada topologi (R0-R1) berapakah jumlah directly connected network dan remote network dari R0?", 
         options: ["2 directly connected, 2 remote", "1 directly connected, 2 remote", "2 directly connected, 3 remote", "2 directly connected, 1 remote"], 
@@ -123,6 +126,20 @@ const feedbackDiv = document.getElementById('feedback');
 const resultsDiv = document.getElementById('results');
 const quizDiv = document.getElementById('quiz');
 
+
+// --- Fungsi Pengacakan Fisher-Yates (Digunakan untuk Soal dan Pilihan) ---
+function shuffleArray(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
+
 // Fungsi untuk menampilkan soal
 function displayQuestion() {
     optionsContainer.innerHTML = '';
@@ -131,7 +148,7 @@ function displayQuestion() {
     answered = false;
     selectedAnswers = [];
 
-    // Hapus gambar lama (penting agar gambar soal sebelumnya tidak tersisa)
+    // Hapus gambar lama 
     const existingImg = optionsContainer.parentNode.querySelector('#question-image');
     if(existingImg) {
         existingImg.remove();
@@ -140,13 +157,16 @@ function displayQuestion() {
     if (currentQuestionIndex < quizQuestions.length) {
         const currentQ = quizQuestions[currentQuestionIndex];
         
+        // **!!! MODIFIKASI: Acak Pilihan Jawaban !!!**
+        shuffleArray(currentQ.options);
+        
         // 1. Tampilkan Teks Pertanyaan
         questionText.innerHTML = `Soal ${currentQuestionIndex + 1} / ${quizQuestions.length}: ${currentQ.question}`;
         
         // 2. Tambahkan Gambar jika properti 'image' ada
         if (currentQ.image) {
             const img = document.createElement('img');
-            img.src = currentQ.image; 
+            img.src = currentQ.image; // Path file gambar
             img.alt = 'Diagram Topologi Jaringan';
             img.id = 'question-image';
             img.style.maxWidth = '100%'; 
@@ -155,7 +175,6 @@ function displayQuestion() {
             img.style.border = '1px solid #ccc';
             img.style.borderRadius = '5px';
             
-            // Sisipkan gambar di antara teks pertanyaan dan pilihan
             questionText.parentNode.insertBefore(img, optionsContainer); 
         }
 
@@ -194,8 +213,6 @@ function displayQuestion() {
 function updateMultiSelect() {
     const checkboxes = document.querySelectorAll('input[name="multi-option"]:checked');
     nextButton.disabled = checkboxes.length === 0 && !answered;
-    // Jika soal multi-select, tombol Lanjutkan diaktifkan segera setelah ada pilihan.
-    // Pengecekan jawaban dilakukan saat tombol Lanjutkan ditekan.
 }
 
 // Handle Single-Select answer
@@ -262,10 +279,12 @@ function checkMultiAnswer(currentQ) {
 function nextQuestion() {
     const currentQ = quizQuestions[currentQuestionIndex];
     
-    // Jika soal Multi-Select, cek jawaban terlebih dahulu
+    // Jika soal Multi-Select, cek jawaban terlebih dahulu pada klik pertama
     if (currentQ.type === 'multi' && !answered) {
-        checkMultiAnswer(currentQ);
-        return; // Tunggu satu klik lagi untuk lanjut setelah feedback
+        if (document.querySelectorAll('input[name="multi-option"]:checked').length > 0) {
+             checkMultiAnswer(currentQ);
+        }
+        return; 
     }
 
     if (answered) {
@@ -292,5 +311,8 @@ function showResults() {
 // Event listener untuk tombol Lanjutkan
 nextButton.addEventListener('click', nextQuestion);
 
-// Inisialisasi kuis
-document.addEventListener('DOMContentLoaded', displayQuestion);
+// Inisialisasi kuis: Acak SOAL dan Mulai
+document.addEventListener('DOMContentLoaded', () => {
+    shuffleArray(quizQuestions); 
+    displayQuestion(); 
+});
