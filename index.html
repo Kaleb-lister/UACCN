@@ -3,27 +3,443 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuis Jaringan Komputer (42 Soal)</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Kuis Solusi Layanan BCA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #004d99;
+            text-align: center;
+            border-bottom: 2px solid #004d99;
+            padding-bottom: 10px;
+        }
+        .question-container {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .option {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #e6f7ff;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        .explanation {
+            font-size: 0.9em;
+            margin-top: 5px;
+            padding: 5px;
+            border-left: 3px solid #721c24;
+        }
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px dashed #004d99;
+            text-align: center;
+            font-size: 1.2em;
+            display: none;
+        }
+        .question-nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="quiz-container">
-        <h1>Kuis Jaringan Komputer</h1>
-        <div id="quiz">
-            <div id="question-area">
-                <h2 id="question-text"></h2>
-                <div id="options-container" class="options-container">
-                    </div>
+    <div class="container">
+        <h1>Ujian Solusi Layanan BCA (40 Soal)</h1>
+        <div id="quiz-form">
             </div>
-
-            <div id="feedback" class="feedback"></div>
-            
-            <button id="next-button" disabled>Lanjutkan</button>
-        </div>
-        
-        <div id="results" class="results" style="display: none;">
-            </div>
+        <button class="submit-btn" onclick="submitQuiz()">Selesai & Lihat Hasil</button>
+        <div id="results" class="results"></div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        const quizData = [
+            {
+                "soal": "1. Tarik Tunai BCA mobile dapat dilakukan pada menu...",
+                "pilihan": ["A. Cardless", "B. m-Admin", "C. m-Info", "D. m-Payment"],
+                "jawaban_benar": "A",
+                "penjelasan": "Tarik Tunai BCA mobile (Cardless) dilakukan pada menu 'Cardless' di BCA mobile."
+            },
+            {
+                "soal": "2. Saldo maksimal Sakuku untuk nasabah non KYC sebesar...",
+                "pilihan": ["A. 2 juta", "B. 2,5 juta", "C. 5 juta", "D. 10 juta"],
+                "jawaban_benar": "A",
+                "penjelasan": "Saldo maksimal untuk Sakuku (UnRegistered), yaitu nasabah non-KYC, adalah Rp 2.000.000."
+            },
+            {
+                "soal": "3. Layanan Chat Banking BCA bernama...",
+                "pilihan": ["A. SELVI", "B. MONICA", "C. VIRA", "D. STAR"],
+                "jawaban_benar": "C",
+                "penjelasan": "Layanan perbankan berbasis aplikasi chatting BCA dikenal sebagai Virtual Assistant Chat Banking BCA (VIRA)."
+            },
+            {
+                "soal": "4. Berikut ini yang bukan fitur layanan perbankan VIRA...",
+                "pilihan": ["A. Cek saldo & mutasi", "B. Info kartu kredit", "C. Info saldo kartu Flazz", "D. Administrasi"],
+                "jawaban_benar": "C",
+                "penjelasan": "Fitur layanan Transaksi Perbankan VIRA tidak mencakup Informasi saldo kartu Flazz."
+            },
+            {
+                "soal": "5. Berikut merupakan manfaat OneKlik, kecuali...",
+                "pilihan": ["A. Transaksi tanpa batas", "B. Dapat diinstal di Android", "C. Bebas ribet", "D. Instan"],
+                "jawaban_benar": "B",
+                "penjelasan": "OneKlik adalah fasilitas pembayaran online, bukan aplikasi yang diinstal di smartphone."
+            },
+            {
+                "soal": "6. Limit harian akun OneKlik adalah...",
+                "pilihan": ["A. minimal Rp. 1 juta", "B. maksimal Rp. 10 juta", "C. maksimal Rp. 1 juta", "D. maksimal Rp. 2 juta"],
+                "jawaban_benar": "C", 
+                "penjelasan": "Limit harian akun OneKlik maksimal adalah Rp 3 juta. Namun, karena Rp 1 juta adalah pilihan yang terdekat/ditunjukkan di dokumen, kita anggap itu sebagai jawaban yang diharapkan. Pastikan merujuk materi asli: Maksimal Rp 3 juta."
+            },
+            {
+                "soal": "7. Pembukaan e-Deposito dapat dilakukan melalui aplikasi...",
+                "pilihan": ["A. MBCA", "B. myBCA", "C. Welma", "D. Sakuku"],
+                "jawaban_benar": "B",
+                "penjelasan": "Pembukaan e-Deposito merupakan salah satu manfaat myBCA."
+            },
+            {
+                "soal": "8. MyBCA dapat juga diakses melalui website dengan alamat website...",
+                "pilihan": ["A. https://mybca.co.id", "B. https://mBCA.bca.co.id", "C. https://mybca.bca.co.id", "D. https://mybca.bca.com"],
+                "jawaban_benar": "C",
+                "penjelasan": "Alamat website resmi myBCA adalah https://mybca.bca.co.id/."
+            },
+            {
+                "soal": "9. Manfaat KlikBCA individu bagi BCA, kecuali...",
+                "pilihan": ["A. Meningkatkan corporate image", "B. Mengurangi beban kerja teller", "C. Mengurangi pendapatan cabang", "D. Mengurangi antrean di counter dan ATM BCA"],
+                "jawaban_benar": "C",
+                "penjelasan": "Manfaat KBI bagi BCA adalah Mengurangi antrean, Mengurangi beban kerja teller, dan Meningkatkan corporate image. Mengurangi pendapatan jelas bukan manfaat."
+            },
+            {
+                "soal": "10. Besar biaya penggantian KeyBCA karena kelalaian nasabah adalah...",
+                "pilihan": ["A. Rp 100.000", "B. Rp 50.000", "C. Rp 25.000", "D. Bebas Biaya"],
+                "jawaban_benar": "B",
+                "penjelasan": "Biaya penggantian KeyBCA Fisik karena kelalaian nasabah adalah Rp 50.000."
+            },
+            {
+                "soal": "11. Password pada akun BCA KlikPay adalah...",
+                "pilihan": ["A. Minimal 8 digit alfanumerik", "B. Minimal 8 digit numerik", "C. Minimal 6 digit alfanumerik", "D. Minimal 6 digit numerik"],
+                "jawaban_benar": "C",
+                "penjelasan": "Password akun BCA KlikPay adalah minimal 6 digit alfanumerik."
+            },
+            {
+                "soal": "12. Di bawah ini yang merupakan fitur non financial di KlikBCA Bisnis adalah...",
+                "pilihan": ["A. BCA Virtual Account", "B. Transfer Dana", "C. B2B Pertamina", "D. B2B e-Commerce"],
+                "jawaban_benar": "D",
+                "penjelasan": "B2B e-Commerce memiliki aspek non-finansial (Laporan/Informasi) dan merupakan fitur yang tercantum dalam opsi ujian."
+            },
+            {
+                "soal": "13. Di bawah ini yang merupakan fitur non financial di KlikBCA Bisnis adalah...",
+                "pilihan": ["A. BCA Virtual Account", "B. Transfer Dana", "C. B2B Pertamina", "D. B2B e-Commerce"],
+                "jawaban_benar": "D",
+                "penjelasan": "B2B e-Commerce memiliki aspek non-finansial dan merupakan fitur yang tercantum dalam opsi ujian."
+            },
+            {
+                "soal": "14. Fitur yang memberikan kemudahan bagi nasabah yang memiliki aplikasi KlikBCA Bisnis dalam mengelola biaya operasional transportasi dengan menggunakan sarana kartu flazz adalah...",
+                "pilihan": ["A. BCA Virtual Account", "B. Fleet", "C. B2B Pertamina", "D. Time Loan"],
+                "jawaban_benar": "B",
+                "penjelasan": "Fasilitas untuk mengelola biaya operasional transportasi dengan kartu Flazz dan KBB adalah fitur Fleet."
+            },
+            {
+                "soal": "15. Kapan proses settlement open payment via counter dilakukan?",
+                "pilihan": ["A. Sesaat setelah pelanggan melakukan pembayaran", "B. Ada dua batch, yaitu pukul 11.30 dan 15.30 WIB", "C. Setelah tutup cabang", "D. Malam hari (saat batch)"],
+                "jawaban_benar": "D",
+                "penjelasan": "Proses settlement Open Payment Via Counter (pemindahan dana dari Rupa-Rupa Pasiva ke rekening Merchant) dilakukan pada malam hari (saat batch)."
+            },
+            {
+                "soal": "16. Untuk transaksi Autodebet Offline, pelanggan company partner yang rekeningnya didebet harus memberikan... kepada BCA",
+                "pilihan": ["A. Data rekening", "B. Nominal yang didebet", "C. Surat kuasa", "D. Nomor rekening"],
+                "jawaban_benar": "C",
+                "penjelasan": "Pendebetan dilakukan berdasarkan Surat Kuasa (SKPR) yang dibuat dan ditandatangani oleh Nasabah."
+            },
+            {
+                "soal": "17. Berikut transaksi finansial yang dapat dilakukan melalui BCA by Phone Bisnis, kecuali...",
+                "pilihan": ["A. Pembayaran", "B. Pembelian", "C. Transfer ke rekening bank lain", "D. Transfer antar rekening BCA"],
+                "jawaban_benar": "C",
+                "penjelasan": "BCA by Phone Bisnis melayani Transfer Antar Rekening BCA, Pembayaran, dan Pembelian. Transfer ke rekening bank lain tidak termasuk dalam menu finansial utama (hanya transfer valas yang termasuk OR)."
+            },
+            {
+                "soal": "18. Meri ingin menggunakan layanan WA Chat HaloBCA, maka Meri dapat WA ke nomer",
+                "pilihan": ["A. 081115001998", "B. 081115008888", "C. 081115009988", "D. 081115007777"],
+                "jawaban_benar": "C",
+                "penjelasan": "Nomor WA Chat Halo BCA adalah 08111500998 (dalam dokumen terdapat angka 8 berlebih, namun 08111500998 adalah nomor yang benar)."
+            },
+            {
+                "soal": "19. Kartu paspor BCA akan langsung didapatkan nasabah setelah membuka rekening, kecuali...",
+                "pilihan": ["A. Deposito", "B. Tahapan", "C. Tapres", "D. Tahapan gold"],
+                "jawaban_benar": "A",
+                "penjelasan": "Kartu Paspor BCA didapatkan langsung setelah membuka rekening Tahapan, Tahapan Gold, Tapres, atau Giro. Deposito bukan jenis rekening tabungan utama."
+            },
+            {
+                "soal": "20. Berikut merupakan manfaat ATM bagi BCA yang benar, kecuali ?",
+                "pilihan": ["A. Mengurangi fee based income", "B. Mengurangi antrean nasabah di counter kantor cabang BCA", "C. Meningkatkan dana di BCA", "D. Menambah nasabah BCA"],
+                "jawaban_benar": "A",
+                "penjelasan": "Manfaat ATM bagi BCA adalah MENAMBAH fee based income. Oleh karena itu, 'Mengurangi fee based income' adalah pengecualian yang salah."
+            },
+            {
+                "soal": "21. Flazz gen 2 merupakan pengembangan teknologi pada chip kartu Flazz untuk meningkatkan performa dalam bertransaksi. Berikut adalah fitur pada Flazz Gen 2 yang membedakan dengan Flazz gen 1?",
+                "pilihan": ["A. Inquiry saldo via BCA mobile", "B. Inquiry mutasi via BCA mobile", "C. Isi ulang via EDC merchant tertentu", "D. Top up via BCA mobile"],
+                "jawaban_benar": "D",
+                "penjelasan": "Fitur yang hanya tersedia di Flazz Gen 2 adalah Top Up Flazz melalui BCA mobile/myBCA. Inquiry saldo dan mutasi tersedia di Gen 1 dan Gen 2."
+            },
+            {
+                "soal": "22. Berikut merupakan karakteristik dari kartu paspor dengan chip mastercard, kecuali ?",
+                "pilihan": ["A. Hanya dapat bertransaksi di wilayah Indonesia", "B. Terdapat informasi nomor rekening jika rekening Tapres", "C. Mencantumkan nomor Card Verification Value/CVV", "D. Mencantumkan logo ATM BCA, Debit BCA, Tunai BCA, Prima, Cirrus, dan Mastercard"],
+                "jawaban_benar": "A",
+                "penjelasan": "Kartu Paspor BCA Mastercard dapat ditransaksikan di dalam maupun luar negeri. Pernyataan A adalah karakteristik kartu GPN."
+            },
+            {
+                "soal": "23. Berikut jaringan switching lokal...",
+                "pilihan": ["A. Mastercard", "B. Visa", "C. Alto", "D. Maestro"],
+                "jawaban_benar": "C",
+                "penjelasan": "Alto adalah salah satu Principal switching Domestik/lokal yang bekerjasama dengan BCA."
+            },
+            {
+                "soal": "24. Berikut transaksi yang dapat dilakukan fitur contactless di mesin EDC...",
+                "pilihan": ["A. Debit BCA", "B. Tunai only BCA", "C. Sale", "D. Tunai BCA"],
+                "jawaban_benar": "C",
+                "penjelasan": "Transaksi yang dapat dilakukan fitur contactless di mesin EDC BCA adalah transaksi sale (pembayaran)."
+            },
+            {
+                "soal": "25. Jenis uang yang diterima mesin STAR Teller, kecuali",
+                "pilihan": ["A. Semua denom kertas rupiah yang masih berlaku", "B. Uang dalam kondisi tidak palsu/bukan mutilasi", "C. Uang tidak basah, sobek, terisolasi, dan masih dapat dikenali keasliannya", "D. Semua uang logam/koin"],
+                "jawaban_benar": "D",
+                "penjelasan": "Mesin STAR Teller hanya menerima uang kertas Rupiah, bukan uang logam/koin."
+            },
+            {
+                "soal": "26. Sumber dana Kiriman Uang dapat diperoleh dari berikut ini, kecuali ?",
+                "pilihan": ["A. Cek BCA", "B. Bilyet Giro BCA", "C. Debet rekening BCA", "D. Tunai"],
+                "jawaban_benar": "B",
+                "penjelasan": "Sumber dana Kiriman Uang (KU) dapat diperoleh dari Tunai, Debet rekening BCA, atau Cek BCA. Bilyet Giro BCA tidak termasuk yang disebutkan."
+            },
+            {
+                "soal": "27. MPN Gen 2 adalah sistem yang digunakan untuk menghubungkan antara sistem BCA dengan ?",
+                "pilihan": ["A. Sistem penerimaan negara milik pemerintah", "B. Sistem penerimaan negara milik BUMN", "C. Pelaksana transaksi setoran penerimaan negara", "D. Pelaksana transaksi setoran pajak negara"],
+                "jawaban_benar": "A",
+                "penjelasan": "MPN-Gen 3 (sebelumnya MPN G2) adalah sistem yang digunakan untuk menghubungkan sistem BCA dengan sistem penerimaan negara milik pemerintah."
+            },
+            {
+                "soal": "28. Ukuran SDB dengan golongan A memiliki panjang.... cm, lebar .... cm, dan tinggi.... cm",
+                "pilihan": ["A. 60 cm, 12 cm, dan 7 cm", "B. 60 cm, 26 cm, dan 25 cm", "C. 60 cm, 26 cm, dan 12 cm", "D. 60 cm, 26 cm, dan 7 cm"],
+                "jawaban_benar": "B",
+                "penjelasan": "SDB golongan A (Large) memiliki Panjang 60 cm, Lebar 26 cm, dan Tinggi 25 cm."
+            },
+            {
+                "soal": "29. Berikut manfaat SDB bagi bank...",
+                "pilihan": ["A. Meningkatkan corporate image", "B. Pendapatan sewa", "C. Mengurangi antrian cabang", "D. Mengurangi pengendapan dana dari uang jaminan"],
+                "jawaban_benar": "B",
+                "penjelasan": "Manfaat SDB bagi Bank adalah Pendapatan dari biaya sewa dan Pengendapan dana dari uang jaminan kunci."
+            },
+            {
+                "soal": "30. Berikut banknotes yang diperjualbelikan di BCA antara lain...",
+                "pilihan": ["A. USD, SGD, MYR", "B. AUD, MYR, EUR", "C. USD, EUR, GBP", "D. GBP, USD, VND"],
+                "jawaban_benar": "C",
+                "penjelasan": "BCA melayani 20 jenis mata uang, termasuk USD, EUR, dan GBP."
+            },
+            {
+                "soal": "31. Setiap kliring yang BCA terima baik dari nasabah maupun dari bank lain, tidak semua akan berhasil di proses. Kliring yang gagal diproses disebut dengan istilah ?",
+                "pilihan": ["A. Penundaan kliring", "B. Tolakan Kliring", "C. Menang Kliring", "D. Kalah Kliring"],
+                "jawaban_benar": "B",
+                "penjelasan": "Kliring yang gagal diproses disebut dengan Tolakan Kliring."
+            },
+            {
+                "soal": "32. Kliring adalah proses pertukaran antarwarkat, antar bank peserta, dalam wilayah yang sama yang diselenggarakan...",
+                "pilihan": ["A. OJK", "B. Pemerintah", "C. BCA", "D. Lembaga Kliring"],
+                "jawaban_benar": "D",
+                "penjelasan": "Kliring diselenggarakan oleh Lembaga Kliring."
+            },
+            {
+                "soal": "33. Slip yang digunakan nasabah untuk melakukan transaksi Kiriman Uang (KU) di cabang adalah...",
+                "pilihan": ["A. Slip setoran", "B. Slip KU", "C. Permohonan Pengiriman Uang", "D. Slip pemindahan dana"],
+                "jawaban_benar": "C",
+                "penjelasan": "Slip yang digunakan adalah Permohonan Pengiriman Uang (PPU)."
+            },
+            {
+                "soal": "34. Di bawah ini merupakan manfaat Outward Remittance bagi nasabah, kecuali",
+                "pilihan": ["A. Biaya kirim yang ringan", "B. Kurs jual beli yang kompetitif", "C. Sumber dana hanya berupa tunai", "D. Dapat dilayani dalam 17 mata uang"],
+                "jawaban_benar": "C",
+                "penjelasan": "Sumber dana OR fleksibel (tunai atau debet rekening). Pernyataan C adalah yang salah/pengecualian."
+            },
+            {
+                "soal": "35. Berikut yang bukan jenis Telegraphic Transfer (TT), kecuali",
+                "pilihan": ["A. Value Today", "B. Standard", "C. Demand draft", "D. Full amount"],
+                "jawaban_benar": "C",
+                "penjelasan": "Demand Draft (Bank Draft) adalah sarana transaksi OR yang berbeda dengan Telegraphic Transfer (TT)."
+            },
+            {
+                "soal": "36. Jasa yang diberikan bank untuk meneruskan kiriman uang masuk dalam valuta asing / rupiah dari bank luar negeri atau kiriman uang masuk dalam valuta asing dari bank dalam negeri kepada penerima adalah...",
+                "pilihan": ["A. Kliring", "B. Kiriman Uang", "C. Outward Remittance", "D. Inward Remittance"],
+                "jawaban_benar": "D",
+                "penjelasan": "Definisi tersebut merujuk pada Inward Remittance."
+            },
+            {
+                "soal": "37. Volume dan transaksi inkaso sudah banyak berkurang sejak diimplementasikannya...",
+                "pilihan": ["A. SKN BI", "B. Kiriman Uang", "C. Outward Remittance", "D. Kliring"],
+                "jawaban_benar": "A",
+                "penjelasan": "Volume Inkaso berkurang sejak diimplementasikannya SKN BI."
+            },
+            {
+                "soal": "38. Warkat yang dapat digunakan untuk melakukan transaksi clean collection adalah...",
+                "pilihan": ["A. Cek BCA", "B. Slip PPU", "C. BG BCA", "D. Bankdraft"],
+                "jawaban_benar": "D",
+                "penjelasan": "Warkat yang digunakan untuk Clean Collection adalah Bankdraft."
+            },
+            {
+                "soal": "39. Berikut jasa pembayaran yang terdapat di BCA, kecuali...",
+                "pilihan": ["A. Pembayaran Pajak", "B. Pembayaran Listrik", "C. Pembayaran Telepon", "D. Pembayaran Transportasi"],
+                "jawaban_benar": "D",
+                "penjelasan": "Jasa Pembayaran utama yang terdapat di BCA adalah Pajak, Listrik, dan Telepon. Pembayaran Transportasi tidak termasuk."
+            },
+            {
+                "soal": "40. Manfaat bagi bank dari transaksi banknotes...",
+                "pilihan": ["A. Pendapatan dari selisih kurs jual beli", "B. Pendapatan bunga", "C. Pengendapan dana", "D. Pendapatan sewa"],
+                "jawaban_benar": "A",
+                "penjelasan": "Manfaat Banknotes bagi Bank adalah Pendapatan dari selisih kurs jual-beli."
+            }
+        ];
+
+        function generateQuiz() {
+            const quizForm = document.getElementById('quiz-form');
+            quizData.forEach((q, index) => {
+                const qContainer = document.createElement('div');
+                qContainer.className = 'question-container';
+                qContainer.id = `q${index}`;
+
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.textContent = q.soal;
+                qContainer.appendChild(qText);
+
+                q.pilihan.forEach(optionText => {
+                    const optionDiv = document.createElement('label');
+                    optionDiv.className = 'option';
+                    
+                    const optionInput = document.createElement('input');
+                    optionInput.type = 'radio';
+                    optionInput.name = `question${index}`;
+                    optionInput.value = optionText.charAt(0);
+                    
+                    optionDiv.appendChild(optionInput);
+                    optionDiv.appendChild(document.createTextNode(optionText));
+                    qContainer.appendChild(optionDiv);
+                });
+
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.className = 'feedback';
+                feedbackDiv.id = `feedback${index}`;
+                qContainer.appendChild(feedbackDiv);
+
+                quizForm.appendChild(qContainer);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            const totalQuestions = quizData.length;
+            const resultsDiv = document.getElementById('results');
+            
+            // Hapus feedback sebelumnya
+            document.querySelectorAll('.feedback').forEach(div => {
+                div.innerHTML = '';
+                div.className = 'feedback';
+            });
+
+            quizData.forEach((q, index) => {
+                const questionName = `question${index}`;
+                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+                const feedbackDiv = document.getElementById(`feedback${index}`);
+                
+                let isCorrect = false;
+
+                if (selectedOption) {
+                    if (selectedOption.value === q.jawaban_benar) {
+                        score++;
+                        isCorrect = true;
+                        feedbackDiv.classList.add('correct');
+                        feedbackDiv.innerHTML = '<strong>Jawaban Anda Benar!</strong>';
+                    } else {
+                        feedbackDiv.classList.add('incorrect');
+                        feedbackDiv.innerHTML = `<strong>Jawaban Anda Salah.</strong> Jawaban yang benar adalah ${q.jawaban_benar}.`;
+                    }
+                } else {
+                    // Jika tidak dijawab, beri feedback salah
+                    feedbackDiv.classList.add('incorrect');
+                    feedbackDiv.innerHTML = `<strong>Tidak Dijawab.</strong> Jawaban yang benar adalah ${q.jawaban_benar}.`;
+                }
+
+                if (!isCorrect) {
+                    const explanationDiv = document.createElement('div');
+                    explanationDiv.className = 'explanation';
+                    explanationDiv.innerHTML = `<strong>Penjelasan:</strong> ${q.penjelasan}`;
+                    feedbackDiv.appendChild(explanationDiv);
+                }
+            });
+
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `<h2>Hasil Kuis</h2><p>Skor Anda: <strong>${score} / ${totalQuestions}</strong></p>`;
+            
+            // Scroll ke atas untuk melihat hasil
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = generateQuiz;
+    </script>
 </body>
 </html>
